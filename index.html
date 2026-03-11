@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSM Software | Leading Marketing Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary-blue: #0056b3;
+            --secondary-blue: #003d80;
+            --accent-blue: #e6f0ff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0056b3 0%, #002d5a 100%);
+        }
+
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+
+        .feature-card, .pricing-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover, .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Scroll Animation Classes */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal Transitions */
+        .modal-overlay {
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0056b3;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #003d80;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-[100] flex flex-col gap-3"></div>
+
+    <!-- Video Demo Modal -->
+    <div id="demo-modal" class="fixed inset-0 z-[60] flex items-center justify-center opacity-0 pointer-events-none modal-overlay bg-black/70">
+        <div class="bg-white rounded-2xl w-11/12 max-w-4xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-xl font-bold text-gray-800">KSM Software Platform</h3>
+                <button id="close-modal" class="text-gray-500 hover:text-red-500 transition-colors focus:outline-none">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+            </div>
+            <div class="aspect-w-16 aspect-h-9 bg-gray-900 p-8 flex items-center justify-center min-h-[400px]">
+                <!-- Placeholder for actual iframe -->
+                <div class="text-center text-white">
+                    <i class="fas fa-play-circle text-6xl mb-4 text-blue-500 hover:text-blue-400 cursor-pointer transition-colors"></i>
+                    <p class="text-lg">Interactive Demo Video Player</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50 transition-shadow duration-300" id="main-header">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <!-- Logo -->
+                <a href="#home" class="flex items-center scroll-link">
+                    <div class="text-2xl font-bold text-blue-700 flex items-center">
+                        <i class="fas fa-rocket mr-2"></i>
+                        <span>KSM SOFTWARE</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex space-x-8 font-medium">
+                    <a href="#home" class="nav-link text-gray-600 hover:text-blue-700 scroll-link">Home</a>
+                    <a href="#products" class="nav-link text-gray-600 hover:text-blue-700 scroll-link">Products</a>
+                    <a href="#services" class="nav-link text-gray-600 hover:text-blue-700 scroll-link">Services</a>
+                    <a href="#pricing" class="nav-link text-gray-600 hover:text-blue-700 scroll-link">Pricing</a>
+                    <a href="#contact" class="nav-link text-gray-600 hover:text-blue-700 scroll-link">Contact</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden md:block">
+                    <a href="#pricing" class="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-blue-700 transition scroll-link">Get Started</a>
+                </div>
+
+                <!-- Mobile Toggle -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-600 focus:outline-none">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-white border-t border-gray-100 px-4 py-4 hidden absolute w-full shadow-lg">
+            <div class="flex flex-col space-y-4">
+                <a href="#home" class="mobile-nav-link text-gray-600 font-medium hover:text-blue-600">Home</a>
+                <a href="#products" class="mobile-nav-link text-gray-600 font-medium hover:text-blue-600">Products</a>
+                <a href="#services" class="mobile-nav-link text-gray-600 font-medium hover:text-blue-600">Services</a>
+                <a href="#pricing" class="mobile-nav-link text-gray-600 font-medium hover:text-blue-600">Pricing</a>
+                <a href="#contact" class="mobile-nav-link text-gray-600 font-medium hover:text-blue-600">Contact</a>
+                <a href="#pricing" class="mobile-nav-link bg-blue-600 text-white px-6 py-2 rounded-md text-center font-semibold hover:bg-blue-700">Get Started</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="gradient-bg text-white py-20 lg:py-32">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center">
+            <div class="lg:w-1/2 text-center lg:text-left mb-12 lg:mb-0 animate-on-scroll">
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
+                    Professional Marketing <br> <span class="text-blue-300">Software Solutions</span>
+                </h1>
+                <p class="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto lg:mx-0">
+                    Optimize your business growth with our comprehensive suite of automated marketing tools. Save time, scale faster, and reach more customers globally.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                    <a href="#pricing" class="bg-white text-blue-700 px-8 py-3 rounded-full font-bold text-lg hover:bg-blue-50 transition shadow-lg text-center scroll-link">Try For Free</a>
+                    <button id="open-demo" class="border-2 border-white text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-white hover:text-blue-700 transition text-center flex items-center justify-center">
+                        <i class="fas fa-play-circle mr-2"></i> Watch Demo
+                    </button>
+                </div>
+            </div>
+            <div class="lg:w-1/2 animate-on-scroll" style="transition-delay: 200ms;">
+                <div class="relative">
+                    <div class="bg-blue-400/20 absolute -inset-4 rounded-xl blur-2xl"></div>
+                    <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=2426" alt="Dashboard Preview" class="relative rounded-xl shadow-2xl border border-blue-400/30 w-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-10 animate-on-scroll" style="transition-delay: 400ms;">
+        <div class="bg-white rounded-xl shadow-xl grid grid-cols-2 md:grid-cols-4 gap-8 p-8">
+            <div class="text-center">
+                <div class="text-3xl font-bold text-blue-700 mb-1">10,000+</div>
+                <div class="text-sm text-gray-500 font-medium">Active Users</div>
+            </div>
+            <div class="text-center md:border-l border-gray-100">
+                <div class="text-3xl font-bold text-blue-700 mb-1">50+</div>
+                <div class="text-sm text-gray-500 font-medium">Software Tools</div>
+            </div>
+            <div class="text-center border-t md:border-t-0 md:border-l border-gray-100 pt-8 md:pt-0">
+                <div class="text-3xl font-bold text-blue-700 mb-1">98%</div>
+                <div class="text-sm text-gray-500 font-medium">Satisfaction</div>
+            </div>
+            <div class="text-center border-t md:border-t-0 md:border-l border-gray-100 pt-8 md:pt-0">
+                <div class="text-3xl font-bold text-blue-700 mb-1">24/7</div>
+                <div class="text-sm text-gray-500 font-medium">Tech Support</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <section id="products" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Our Best-Selling Software</h2>
+                <div class="w-20 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-6 max-w-2xl mx-auto">Explore our diverse range of automation software designed to simplify your marketing workflow.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Product 1 -->
+                <div class="feature-card animate-on-scroll bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col h-full" style="transition-delay: 100ms;">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-2xl">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">KSM Care</h3>
+                    <p class="text-gray-600 mb-6 flex-grow">Comprehensive Facebook account management and auto-posting system for maximum reach.</p>
+                    <a href="#" class="text-blue-600 font-semibold hover:underline mt-auto inline-block">Learn more <i class="fas fa-arrow-right ml-1 text-xs"></i></a>
+                </div>
+
+                <!-- Product 2 -->
+                <div class="feature-card animate-on-scroll bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col h-full" style="transition-delay: 200ms;">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-2xl">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3"> TikTok</h3>
+                    <p class="text-gray-600 mb-6 flex-grow">Automate your TikTok interactions, content uploads, and viewer engagement effortlessly.</p>
+                    <a href="#" class="text-blue-600 font-semibold hover:underline mt-auto inline-block">Learn more <i class="fas fa-arrow-right ml-1 text-xs"></i></a>
+                </div>
+
+                <!-- Product 3 -->
+                <div class="feature-card animate-on-scroll bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col h-full" style="transition-delay: 300ms;">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center mb-6 text-2xl">
+                        <i class="fas fa-envelope-open-text"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3"> Mailer</h3>
+                    <p class="text-gray-600 mb-6 flex-grow">High-delivery email marketing automation to connect with your database instantly.</p>
+                    <a href="#" class="text-blue-600 font-semibold hover:underline mt-auto inline-block">Learn more <i class="fas fa-arrow-right ml-1 text-xs"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services / Why Choose Us -->
+    <section id="services" class="bg-blue-50 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 w-full animate-on-scroll">
+                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=2340" alt="Team Meeting" class="rounded-2xl shadow-lg w-full object-cover">
+                </div>
+                <div class="lg:w-1/2 w-full animate-on-scroll" style="transition-delay: 200ms;">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Why  Software Global?</h2>
+                    <p class="text-gray-600 mb-8">We don't just sell software; we provide growth ecosystems. Our tools are built on years of marketing expertise to ensure you get the best ROI.</p>
+                    
+                    <ul class="space-y-6">
+                        <li class="flex items-start">
+                            <div class="bg-blue-600 text-white p-2 rounded-full mr-4 mt-1 flex-shrink-0">
+                                <i class="fas fa-check text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-lg">Advanced AI Integration</h4>
+                                <p class="text-gray-600 mt-1">Our tools use AI to mimic human behavior and avoid platform bans.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-blue-600 text-white p-2 rounded-full mr-4 mt-1 flex-shrink-0">
+                                <i class="fas fa-check text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-lg">User-Friendly Interface</h4>
+                                <p class="text-gray-600 mt-1">Clean, intuitive dashboards that require zero technical skills.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <div class="bg-blue-600 text-white p-2 rounded-full mr-4 mt-1 flex-shrink-0">
+                                <i class="fas fa-check text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-lg">Regular Updates</h4>
+                                <p class="text-gray-600 mt-1">We update our software weekly to stay compatible with social media APIs.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Transparent Pricing Plans</h2>
+                <div class="w-20 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
+                <p class="text-gray-600 mt-6 max-w-2xl mx-auto">Choose the plan that best fits your business needs. Upgrade or cancel anytime.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Starter Plan -->
+                <div class="pricing-card bg-white border border-gray-200 rounded-2xl p-8 flex flex-col animate-on-scroll" style="transition-delay: 100ms;">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+                    <p class="text-gray-500 mb-6">Perfect for small businesses</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-extrabold text-gray-900">$29</span>
+                        <span class="text-gray-500">/mo</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-grow">
+                        <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-3"></i> 3 Social Accounts</li>
+                        <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-3"></i> Basic Analytics</li>
+                        <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-3"></i> Email Support</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-50 transition-colors"><a href="https://link.payway.com.kh/ABAPAYWK423346r" class="hover:text-blue-400 transition-colors">Select Price</a></button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card bg-blue-600 border border-blue-600 rounded-2xl p-8 flex flex-col transform md:-translate-y-4 shadow-xl relative animate-on-scroll" style="transition-delay: 200ms;">
+                    <div class="absolute top-0 right-0 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg uppercase tracking-wide">Most Popular</div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Professional</h3>
+                    <p class="text-blue-200 mb-6">For growing marketing teams</p>
+                    <div class="mb-6 text-white">
+                        <span class="text-4xl font-extrabold">$79</span>
+                        <span class="text-blue-200">/mo</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-grow">
+                        <li class="flex items-center text-white"><i class="fas fa-check text-blue-300 mr-3"></i> Unlimited Accounts</li>
+                        <li class="flex items-center text-white"><i class="fas fa-check text-blue-300 mr-3"></i> Advanced Analytics</li>
+                        <li class="flex items-center text-white"><i class="fas fa-check text-blue-300 mr-3"></i> Priority 24/7 Support</li>
+                        <li class="flex items-center text-white"><i class="fas fa-check text-blue-300 mr-3"></i> AI Content Generator</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl bg-white text-blue-600 font-bold hover:bg-gray-50 transition-colors shadow-md"><a href="https://link.payway.com.kh/ABAPAYkK4233472" class="hover:text-blue-400 transition-colors">Get Started</a></button>
+                </div>
+
+                <!-- Enterprise Plan -->
+                <div class="pricing-card bg-white border border-gray-200 rounded-2xl p-8 flex flex-col animate-on-scroll" style="transition-delay: 300ms;">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                    <p class="text-gray-500 mb-6">Custom solutions for large scale</p>
+                    <div class="mb-6">
+                        <span class="text-4xl font-extrabold text-gray-900">Custom</span>
+                    </div>
+                    <ul class="space-y-4 mb-8 flex-grow">
+                        <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-3"></i> Dedicated Account Manager</li>
+                        <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-3"></i> Custom API Access</li>
+                        <li class="flex items-center text-gray-600"><i class="fas fa-check text-green-500 mr-3"></i> White-label Dashboard</li>
+                    </ul>
+                    <button class="w-full py-3 rounded-xl border-2 border-blue-600 text-blue-600 font-bold hover:bg-blue-50 transition-colors">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="bg-gray-100 py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16 animate-on-scroll">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">What Our Clients Say</h2>
+                <div class="w-20 h-1.5 bg-blue-600 mx-auto rounded-full"></div>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm animate-on-scroll" style="transition-delay: 100ms;">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 mb-6 italic">"KSM Care completely transformed our Facebook strategy. We've seen a 300% increase in engagement since we started using their automation tools."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-200 rounded-full flex items-center justify-center text-blue-700 font-bold text-xl mr-4">S</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Sarah Jenkins</h4>
+                            <p class="text-sm text-gray-500">Marketing Director, TechFlow</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm animate-on-scroll" style="transition-delay: 200ms;">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 mb-6 italic">"The TikTok automation is mind-blowing. It saved our team countless hours and helped us grow our channel to 100k followers in just 3 months."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center text-green-700 font-bold text-xl mr-4">M</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Michael Chen</h4>
+                            <p class="text-sm text-gray-500">E-commerce Founder</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm animate-on-scroll" style="transition-delay: 300ms;">
+                    <div class="flex text-yellow-400 mb-4">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-gray-600 mb-6 italic">"Their customer support is unmatched. Whenever we had an issue configuring our mailer limits, they were there in minutes to help out."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-purple-200 rounded-full flex items-center justify-center text-purple-700 font-bold text-xl mr-4">E</div>
+                        <div>
+                            <h4 class="font-bold text-gray-900">Elena Rodriguez</h4>
+                            <p class="text-sm text-gray-500">Agency Owner</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row gap-16">
+                <div class="lg:w-1/3 animate-on-scroll">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Get in Touch</h2>
+                    <div class="w-20 h-1.5 bg-blue-600 rounded-full mb-8"></div>
+                    <p class="text-gray-600 mb-8">Have questions about our software? Our expert team is ready to help you find the perfect solution for your business.</p>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Office Location</h4>
+                                <p class="text-gray-600">Street 2002, Phnom penh, Cambodia, 10895</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Email Us</h4>
+                                <p class="text-gray-600">support@ksmsoftware.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+                                <i class="fas fa-phone-alt"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900">Call Us</h4>
+                                <p class="text-gray-600">+855 16/93 949 145</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-2/3 animate-on-scroll" style="transition-delay: 200ms;">
+                    <form id="contact-form" class="bg-gray-50 p-8 rounded-2xl shadow-sm border border-gray-100">
+                        <div class="grid md:grid-cols-2 gap-6 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">First Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+                                <input type="text" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow">
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                            <textarea rows="4" required class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors flex justify-center items-center">
+                            <span>Send Message</span>
+                            <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 pt-16 pb-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                <!-- Brand -->
+                <div>
+                    <div class="text-2xl font-bold text-white mb-6 flex items-center">
+                        <i class="fas fa-rocket mr-2 text-blue-500"></i> KSM SOFTWARE
+                    </div>
+                    <p class="text-sm leading-relaxed mb-6">
+                        The world's leading provider of digital marketing automation software. Empowering businesses since 2018.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://t.me/kim_saa" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://t.me/kim_saa" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-400 hover:text-white transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+                        <a href="https://t.me/kim_saa" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-blue-700 hover:text-white transition-colors duration-300"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://t.me/kim_saa" class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors duration-300"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-6">Quick Links</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#home" class="hover:text-blue-400 transition-colors scroll-link">Home</a></li>
+                        <li><a href="#pricing" class="hover:text-blue-400 transition-colors scroll-link">Price Plans</a></li>
+                        <li><a href="#products" class="hover:text-blue-400 transition-colors scroll-link">Software Features</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition-colors">Affiliate Program</a></li>
+                    </ul>
+                </div>
+
+                <!-- Products -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-6">Software</h4>
+                    <ul class="space-y-3 text-sm">
+                        <li><a href="#" class="hover:text-blue-400 transition-colors">Facebook Tools</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition-colors">TikTok Tools</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition-colors">Browser Antidetect</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition-colors">Content Creation</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-6">Stay Updated</h4>
+                    <p class="text-sm mb-4">Subscribe to our newsletter for marketing tips.</p>
+                    <form id="newsletter-form" class="flex flex-col sm:flex-row gap-2">
+                        <input type="email" required placeholder="Email address" class="bg-gray-800 border-none rounded-md px-4 py-2 w-full focus:ring-2 focus:ring-blue-500 outline-none text-white">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors whitespace-nowrap">
+                            Subscribe
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center text-sm">
+                <p class="mb-4 md:mb-0">&copy; 2026 KSM Software Global. All rights reserved.</p>
+                <div class="flex flex-wrap justify-center gap-6">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Refund Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // --- 1. Mobile Menu Toggle ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIcon = menuBtn.querySelector('i');
+        const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+
+        function toggleMenu() {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            } else {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleMenu);
+        mobileLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+
+        // --- 2. Header Scroll Effect ---
+        const header = document.getElementById('main-header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 10) {
+                header.classList.add('shadow-md');
+            } else {
+                header.classList.remove('shadow-md');
+            }
+        });
+
+
+        // --- 3. Smooth Scrolling with Offset ---
+        document.querySelectorAll('.scroll-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const targetId = this.getAttribute('href');
+                if(targetId.startsWith('#') && targetId.length > 1) {
+                    e.preventDefault();
+                    const targetElement = document.querySelector(targetId);
+                    if(targetElement) {
+                        const headerOffset = header.offsetHeight;
+                        const elementPosition = targetElement.getBoundingClientRect().top;
+                        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: "smooth"
+                        });
+                    }
+                }
+            });
+        });
+
+
+        // --- 4. Scroll Animations (Intersection Observer) ---
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // Run animation only once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+            observer.observe(element);
+        });
+
+
+        // --- 5. Modal Logic ---
+        const modal = document.getElementById('demo-modal');
+        const modalContent = document.getElementById('modal-content');
+        const openModalBtn = document.getElementById('open-demo');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        function openModal() {
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-95');
+            modalContent.classList.add('scale-100');
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            document.body.style.overflow = 'auto';
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal(); // Close if clicking outside
+        });
+
+
+        // --- 6. Form Handling & Toast Notifications ---
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            // Style based on type
+            const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+
+            toast.className = `${bgColor} text-white px-6 py-4 rounded-lg shadow-lg flex items-center transform transition-all duration-300 translate-y-10 opacity-0`;
+            toast.innerHTML = `<i class="fas ${icon} text-xl mr-3"></i> <span class="font-medium">${message}</span>`;
+            
+            container.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.classList.remove('translate-y-10', 'opacity-0');
+            }, 10);
+
+            // Animate out and remove
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }, 4000);
+        }
+
+        // Contact Form Submit
+        document.getElementById('contact-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.innerHTML;
+            
+            // Simulate processing state
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast('Your message has been sent successfully!');
+                this.reset(); // Clear form
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }, 1500);
+        });
+
+        // Newsletter Form Submit
+        document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                showToast('Successfully subscribed to our newsletter!');
+                this.reset();
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
